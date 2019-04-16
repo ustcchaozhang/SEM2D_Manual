@@ -24,7 +24,12 @@
 <p class="description">Computation_Seismo</p>
 
 </header>
-
+<div class="menu">
+<nav>
+<ul>
+<li><a href="/SEM2D_Manual/sem2d_manual">主页</a></li></ul>
+</nav>
+</div>
 <div class="content-container">
 <main><h1>如何避免数值频散</h1>
 
@@ -58,7 +63,7 @@
 
 <p>1.在网格的大小设置上，区域内可能出现的最小波长主要与两个因素有关，一是最小的波传播的速度，二是震源频带范围的最大频率。最小的波传播的速度，也就是最小的的S波速度，为3200m/s。最大频率可以对已有的SAC文件做傅立叶变换得到，虽然之前得到了不合理的模拟结果，但是可以通过对生成的SAC文件做傅立叶变换，得到SAC文件的振幅谱图像（如下），找出SAC文件的主要频段，也是震源时间函数的主要频段，通过下图我们可以看出主频为2Hz的震源，其有效信息的最大频率为6Hz左右，所以区域内可能出现的最小波长为3200/6=533.3m，因此将网格的大小设置为500m*500m。</p>
 
-<p><img src="https://github.com/ranoriginals/SEM2D_Manual/blob/master/images/Am.png" alt="Am" /></p>
+<p><img src="https://github.com/ranoriginals/SEM2D_Manual/blob/master/images/Am.png" alt="" /></p>
 
 <p>2.在DT的选择上，如果过大会报错，如果过小则NSTEP要设置的很大才能得到足够长的地震记录，但这也会造成计算的时间会很长，所以需要尽可能取最大值。一般常数取0.3，h的大小取决于网格的大小和一个网格中GLL积分点的个数，GLL积分点的个数默认为5，h与后两者的定量关系目前还不确定。一些尝试表明，在计算DT的选择范围时，h可以认为等于网格的大小/GLL积分点的个数。则对于此次模拟来说，DT应该小于0.3*（500/5/5800=0.005172，所以DT选择0.005是合适的。在实际的计算过程中，可以使用这一关系进行大致估计，如果不出现上述的报错则说明设置的DT是正确的。</p>
 
