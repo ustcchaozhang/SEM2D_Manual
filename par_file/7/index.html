@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>7.parameters for internal meshing - Introduction to SEM2D</title>
+<meta name="description" content="SEM2D Manual">
+<meta name="generator" content="Hugo 0.54.0" />
+<link href="https://ranoriginals.github.io/SEM2D_Manual/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://ranoriginals.github.io/SEM2D_Manual/par_file/7/">
+<link rel="stylesheet" href="https://ranoriginals.github.io/SEM2D_Manual/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://ranoriginals.github.io/SEM2D_Manual/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://ranoriginals.github.io/SEM2D_Manual/js/functions.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://ranoriginals.github.io/SEM2D_Manual/js/jquery.backtothetop/jquery.backtothetop.min.js"></script></head>
+<body>
+<div class="container"><header>
+<h1>Introduction to SEM2D</h1>
+
+ <span class="version">Version 0.1</span>
+<a href="https://github.com/ranoriginals/SEM2D_Manual" class="github"><i class="fab fa-github"></i></a>
+<p class="description">SEM2D Manual</p>
+
+</header>
+<div class="menu">
+<nav>
+<ul>
+<li><a href="/SEM2D_Manual/sem2d_manual">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>7.parameters for internal meshing</h1>
+
+<h2 id="给予xmeshfem2d进行网格化的设置项">给予xmeshfem2D进行网格化的设置项</h2>
+
+<table>
+<thead>
+<tr>
+<th align="center">设置项</th>
+<th align="center">赋值</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">interfacesfile</td>
+<td align="center">interfaces_simple_topo_curved.dat</td>
+<td align="center">给出界面文件与所在的位置</td>
+</tr>
+
+<tr>
+<td align="center">xmin</td>
+<td align="center">0.d0</td>
+<td align="center">模型左边界的X值</td>
+</tr>
+
+<tr>
+<td align="center">xmax</td>
+<td align="center">4000.d0</td>
+<td align="center">模型右边界的X值</td>
+</tr>
+
+<tr>
+<td align="center">nx</td>
+<td align="center">80</td>
+<td align="center">X方向网格化的个数，这里表示4000米内均匀划分为80个网格，每个网格X轴长度为50m</td>
+</tr>
+
+<tr>
+<td align="center">adsorbbottom</td>
+<td align="center">.true.</td>
+<td align="center">底边界为吸收边界，具体设置见上absorbing_conditions设置</td>
+</tr>
+
+<tr>
+<td align="center">nbregions</td>
+<td align="center">5</td>
+<td align="center">模型内共划分成5个区域，对于每个区域填充不同物性的介质</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># nxmin nxmax nzmin nzmax material_number</span>
+<span class="c1"># 区域由划分的网格组成，对于一个固定的区域来说，其左右边界由第x1个网格到第x2个网格固定，其上下边界由第z1个网格到第z2个网格固定，最后给出这一区域填充的介质的物性，由nbmodels中的数字给定</span>
+<span class="m">1</span> <span class="m">80</span>  <span class="m">1</span> <span class="m">20</span> <span class="m">1</span>
+<span class="m">1</span> <span class="m">59</span> <span class="m">21</span> <span class="m">40</span> <span class="m">2</span>
+<span class="m">71</span> <span class="m">80</span> <span class="m">21</span> <span class="m">40</span> <span class="m">2</span>
+<span class="m">1</span> <span class="m">80</span> <span class="m">41</span> <span class="m">60</span> <span class="m">3</span>
+<span class="m">60</span> <span class="m">70</span> <span class="m">21</span> <span class="m">40</span> <span class="m">4</span></code></pre></div><div class="edit-meta">Last updated on 17 Oct 2017 / Published on 17 Oct 2017<br></div><nav class="pagination"><a class="nav nav-prev" href="/SEM2D_Manual/par_file/6/" title="6.velocity and density models"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - 6.velocity and density models</a>
+<a class="nav nav-next" href="/SEM2D_Manual/par_file/8/" title="8.display parameters">Next - 8.display parameters <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+<nav>
+<ul>
+<li class=""><a href="https://ranoriginals.github.io/SEM2D_Manual/">Home</a></li>
+
+<li class=""><a href="/SEM2D_Manual/quick-start/">上手</a>
+<ul class="">
+<li class=""><a href="/SEM2D_Manual/quick-start/installation/">安装</a></li>
+<li class=""><a href="/SEM2D_Manual/quick-start/test/">测试</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/SEM2D_Manual/par_file/">Par_file文件的设置项</a>
+<ul class="sub-menu">
+<li class=""><a href="/SEM2D_Manual/par_file/1/">1.simulation input parameters</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/2/">2.attentuation</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/3/">3.sources</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/4/">4.receivers</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/5/">5.boundary conditions</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/6/">6.velocity and density models</a></li>
+<li class="active"><a href="/SEM2D_Manual/par_file/7/">7.parameters for internal meshing</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/8/">8.display parameters</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/9/">9.movies/images/snapshots</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/SEM2D_Manual/source/">SOURCE文件的设置项</a>
+</li>
+
+<li class=""><a href="/SEM2D_Manual/mesh_dt_setup/">如何避免数值频散</a>
+</li>
+</ul>
+</nav>
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

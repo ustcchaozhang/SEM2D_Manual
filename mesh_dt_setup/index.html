@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>如何避免数值频散 - Introduction to SEM2D</title>
+<meta name="description" content="SEM2D Manual">
+<meta name="generator" content="Hugo 0.54.0" />
+<link href="https://ranoriginals.github.io/SEM2D_Manual/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://ranoriginals.github.io/SEM2D_Manual/mesh_dt_setup/">
+<link rel="stylesheet" href="https://ranoriginals.github.io/SEM2D_Manual/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://ranoriginals.github.io/SEM2D_Manual/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://ranoriginals.github.io/SEM2D_Manual/js/functions.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://ranoriginals.github.io/SEM2D_Manual/js/jquery.backtothetop/jquery.backtothetop.min.js"></script></head>
+<body>
+<div class="container"><header>
+<h1>Introduction to SEM2D</h1>
+
+ <span class="version">Version 0.1</span>
+<a href="https://github.com/ranoriginals/SEM2D_Manual" class="github"><i class="fab fa-github"></i></a>
+<p class="description">SEM2D Manual</p>
+
+</header>
+<div class="menu">
+<nav>
+<ul>
+<li><a href="/SEM2D_Manual/sem2d_manual">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>如何避免数值频散</h1>
+
+<p>在使用二维的SEM模拟地震波传播的过程中，Par_file中output_color_image选项决定了是否输出波场的snapshot，这些snapshot会在OUTPUT_FILES里被命名为forward_image*.jpg，有了这样的输出文件之后，我们应该怎么评价此次模拟是否合理？</p>
+
+<p>先说结论：</p>
+
+<blockquote>
+<p>区域内出现的最短的波长必须大于网格的尺寸</p>
+</blockquote>
+
+<h3 id="首先给出一个不太合理的例子">首先给出一个不太合理的例子</h3>
+
+<p><img src="/images/noise.png" alt="noise" /></p>
+
+<p>上图分别给出了波场在4s，40s，76s的snapshot，注意4s图中黄色方框部分，相较于传播更快的P波，这里的S波在第一层介质中的传播过程中伴随有噪声出现，而这些噪声在4s之后的时间（如40s，76s）会逐渐传播至整个区域。由于数值方法在模拟地震波传播时，如果解是稳定的，则只会有波的存在，不会出现噪声。因此这里出现噪声证明了这次模拟（即数值解）不够稳定，出现了数值频散。</p>
+
+<h3 id="那么-对于二维的sem稳定的数值解主要依赖于">那么，对于二维的SEM稳定的数值解主要依赖于：</h3>
+
+<p>1.在对整个研究区域网格化时，网格的大小必须小于区域内可能出现的波长最小值。如果不这样设置，解会不稳定,就会出现噪声</p>
+
+<p>2.DT的设置必须要满足DT &lt; constant*min(h/v)，其中constant是一个常数，一般取值为0.3，h是两个GLL积分点之间的距离，v是介质中波传播的速度。min(h/v)意味着最小的网格点距离除以最大的速度。详细内容请见Specfem3D的user_manual中4.2节。如果网格变小，DT未随之调整变小，则会有如下报错信息。</p>
+
+<p><img src="/images/error.png" alt="error" /></p>
+
+<h3 id="具体示例">具体示例</h3>
+
+<p>下面给出一个具体的例子，研究的区域大小为200km*100km，其中X方向长为200km，Z方向长为100km，震源时间函数设置为Ricker，主频设置为2Hz。整个区域设置为3层模型，每层的厚度为30km/30km/40km，每层模型的速度-密度参数如下图：</p>
+
+<p><img src="/images/model.png" alt="model" /></p>
+
+<p>1.在网格的大小设置上，区域内可能出现的最小波长主要与两个因素有关，一是最小的波传播的速度，二是震源频带范围的最大频率。最小的波传播的速度，也就是最小的的S波速度，为3200m/s。最大频率可以对已有的SAC文件做傅立叶变换得到，虽然之前得到了不合理的模拟结果，但是可以通过对生成的SAC文件做傅立叶变换，得到SAC文件的振幅谱图像（如下），找出SAC文件的主要频段，也是震源时间函数的主要频段，通过下图我们可以看出主频为2Hz的震源，其有效信息的最大频率为6Hz左右，所以区域内可能出现的最小波长为3200/6=533.3m，因此将网格的大小设置为500m*500m。</p>
+
+<p><img src="/images/Am.png" alt="Am" /></p>
+
+<p>2.在DT的选择上，如果过大会报错，如果过小则NSTEP要设置的很大才能得到足够长的地震记录，但这也会造成计算的时间会很长，所以需要尽可能取最大值。一般常数取0.3，h的大小取决于网格的大小和一个网格中GLL积分点的个数，GLL积分点的个数默认为5，h与后两者的定量关系目前还不确定。一些尝试表明，在计算DT的选择范围时，h可以认为等于网格的大小/GLL积分点的个数。则对于此次模拟来说，DT应该小于0.3*（500/5/5800=0.005172，所以DT选择0.005是合适的。在实际的计算过程中，可以使用这一关系进行大致估计，如果不出现上述的报错则说明设置的DT是正确的。</p>
+
+<p><img src="/images/no_noise.png" alt="no_noise" /></p>
+
+<p>相较于之前（区域网格大小设置为1km*1km，DT取0.01，其余参数相同），噪声不再出现，从波场图的角度分析这是一个合理的模拟结果。</p>
+
+<h3 id="注-怎么基于已有的sac文件绘制振幅谱">注：怎么基于已有的SAC文件绘制振幅谱</h3>
+
+<pre><code>$ sac
+
+SAC &gt; r ./AA.S0001.BXZ.SAC
+SAC &gt; fft
+SAC &gt; psp am
+SAC &gt; q
+</code></pre>
+
+<p>SEM3D的user_manual:
+<a href="https://github.com/geodynamics/specfem3d/blob/master/doc/USER_MANUAL/manual_SPECFEM3D_Cartesian.pdf">https://github.com/geodynamics/specfem3d/blob/master/doc/USER_MANUAL/manual_SPECFEM3D_Cartesian.pdf</a></p>
+<div class="edit-meta">Last updated on 17 Oct 2017 / Published on 17 Oct 2017<br></div><nav class="pagination"><a class="nav nav-prev" href="/SEM2D_Manual/source/" title="SOURCE文件的设置项"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - SOURCE文件的设置项</a>
+<a class="nav nav-next" href="/SEM2D_Manual/quick-start/" title="上手">Next - 上手 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+<nav>
+<ul>
+<li class=""><a href="https://ranoriginals.github.io/SEM2D_Manual/">Home</a></li>
+
+<li class=""><a href="/SEM2D_Manual/quick-start/">上手</a>
+<ul class="">
+<li class=""><a href="/SEM2D_Manual/quick-start/installation/">安装</a></li>
+<li class=""><a href="/SEM2D_Manual/quick-start/test/">测试</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/SEM2D_Manual/par_file/">Par_file文件的设置项</a>
+<ul class="">
+<li class=""><a href="/SEM2D_Manual/par_file/1/">1.simulation input parameters</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/2/">2.attentuation</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/3/">3.sources</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/4/">4.receivers</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/5/">5.boundary conditions</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/6/">6.velocity and density models</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/7/">7.parameters for internal meshing</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/8/">8.display parameters</a></li>
+<li class=""><a href="/SEM2D_Manual/par_file/9/">9.movies/images/snapshots</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/SEM2D_Manual/source/">SOURCE文件的设置项</a>
+</li>
+
+<li class="parent active"><a href="/SEM2D_Manual/mesh_dt_setup/">如何避免数值频散</a>
+</li>
+</ul>
+</nav>
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>
