@@ -3,11 +3,11 @@
 <head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Categories - Introduction to SEM2D</title>
+<title>界面设置 - Introduction to SEM2D</title>
 <meta name="description" content="Computation_Seismo">
 <meta name="generator" content="Hugo 0.54.0" />
 <link href="https://ranoriginals.github.io/SEM2D_Manualindex.xml" rel="alternate" type="application/rss+xml">
-<link rel="canonical" href="https://ranoriginals.github.io/SEM2D_Manual/categories/">
+<link rel="canonical" href="https://ranoriginals.github.io/SEM2D_Manual/chapter1/">
 <link rel="stylesheet" href="https://ranoriginals.github.io/SEM2D_Manual/css/theme.min.css">
 <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 <link rel="stylesheet" href="https://ranoriginals.github.io/SEM2D_Manual/css/chroma.min.css">
@@ -31,7 +31,49 @@
 </nav>
 </div>
 <div class="content-container">
-<main><h1>Categories</h1><div class="edit-meta">Last updated on 1 Jan 0001 / Published on 1 Jan 0001<br></div><nav class="pagination"><a class="nav nav-next" href="/SEM2D_Manual/quick-start/" title="上手">Next - 上手 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+<main><h1>界面设置</h1>
+
+<h3 id="注意-以下的说明都是根据sem2d自带的xmeshfem2d实现的网格化">注意，以下的说明都是根据SEM2D自带的xmeshfem2D实现的网格化</h3>
+
+<h4 id="设置介质的界面">设置介质的界面</h4>
+
+<p>在二维的SEM中，一般会选取X-Z平面作为研究区域，所以对研究区域作为分层，决定分层的这一界面实际上是一条线。</p>
+
+<h5 id="1-水平界面">1. 水平界面</h5>
+
+<p>由于两点在二维平面内可以确定的生成一条直线，所以确定水平界面只需要给出界面的起点和终点的X，Z坐标</p>
+
+<p>对应一个两层的水平分层的介质来说，相应的界面文件：<code>interfaces_flat.dat</code>为（中文仅是说明，不需要包括在此文件内）：</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># number of interfaces</span>
+ <span class="m">3</span>
+<span class="c1"># 划分出两层，需要有3个界面</span>
+<span class="c1"># for each interface below, we give the number of points and then x,z for each point</span>
+<span class="c1"># interface number 1 (bottom of the mesh)</span>
+ <span class="m">2</span> 
+<span class="c1">#决定这一界面的点的个数</span>
+ <span class="m">0</span> <span class="m">0</span> 
+<span class="c1">#起点的X，Z坐标，单位是米</span>
+ <span class="m">5000</span> <span class="m">0</span> 
+<span class="c1"># 终点的X，Z坐标，单位是米</span>
+<span class="c1"># interface number 2</span>
+ <span class="m">2</span>
+ <span class="m">0</span> <span class="m">1000</span>
+ <span class="m">5000</span> <span class="m">1000</span>
+<span class="c1"># interface number 3 (top of the mesh)</span>
+ <span class="m">2</span>
+ <span class="m">0</span> <span class="m">3000</span>
+ <span class="m">5000</span> <span class="m">3000</span>
+<span class="c1"># for each layer, we give the number of spectral elements in the vertical direction</span>
+<span class="c1"># 对于每一层，给出垂向上计算单元的个数，这里对于垂向上的1000m会出现20个计算单元，每个单元Z方向的长度为50m</span>
+<span class="c1"># layer number 1 (bottom layer)</span>
+ <span class="m">20</span>
+<span class="c1"># layer number 2 (top layer)</span>
+ <span class="m">40</span></code></pre></div>
+<h5 id="2-弯曲界面">2. 弯曲界面</h5>
+
+<p>在二维平面内确定一条曲线需要多个点，点数越多就可以模拟越复杂的界面，与确定水平界面同理，需要给出每个点的X，Z坐标。相应的界面文件为<code>EXAMPLES/simple_topography_and_also_a_simple_fluid_layer/DATA</code>中的<code>interfaces_simple_topo_curved.dat</code></p>
+<div class="edit-meta">Last updated on 17 Oct 2017 / Published on 17 Oct 2017<br></div><nav class="pagination"><a class="nav nav-prev" href="/SEM2D_Manual/quick-start/test/" title="测试"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - 测试</a>
+<a class="nav nav-next" href="/SEM2D_Manual/par_file/" title="Par_file文件的设置项">Next - Par_file文件的设置项 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
 </nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
 </footer>
 </main><div class="sidebar">
@@ -47,7 +89,7 @@
   
 </li>
 
-<li class=""><a href="/SEM2D_Manual/chapter1/">界面设置</a>
+<li class="parent active"><a href="/SEM2D_Manual/chapter1/">界面设置</a>
 </li>
 
 <li class=""><a href="/SEM2D_Manual/par_file/">Par_file文件的设置项</a>
