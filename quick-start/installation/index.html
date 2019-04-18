@@ -57,7 +57,13 @@ $ make</code></pre></div>
 <h4 id="使用icc-ifort进行安装">使用icc/ifort进行安装</h4>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ ./configure <span class="nv">FC</span><span class="o">=</span>ifort <span class="nv">CC</span><span class="o">=</span>icc
 $ make</code></pre></div>
-<h4 id="使用cuda进行安装">使用cuda进行安装</h4>
+<h4 id="基于mpi进行安装">基于MPI进行安装</h4>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ ./configure <span class="nv">FC</span><span class="o">=</span>gfortran <span class="nv">CC</span><span class="o">=</span>gcc <span class="nv">MPIFC</span><span class="o">=</span>/usr/local/mpi-3.1.4/bin/mpif90 --with-mpi</code></pre></div>
+<blockquote>
+<p>MPIFC最好给出显式路径，不然可能会调用系统其它的MPI。</p>
+</blockquote>
+
+<h4 id="使用cuda进行安装-目前还存在问题-不可以进行计算">使用cuda进行安装(目前还存在问题，不可以进行计算)</h4>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ ./configure --with-cuda<span class="o">=</span>yes
 $ make</code></pre></div>
 <p>注意，在使用cuda进行编译安装的时候，在<code>make</code>这一步会出现报错：</p>
